@@ -5,16 +5,21 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Board extends JFrame {
+public class Board extends JFrame
+{
     JButton[][] squares = new JButton[4][4];
+
+
 
     public Board()
     {
         Container container = getContentPane();
         container.setLayout((new GridLayout(4, 4)));
 
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
+        for (int i = 0; i < 4; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
                 JButton num = new JButton();
                 squares[i][j] = num;
                 container.add(num);
@@ -23,37 +28,47 @@ public class Board extends JFrame {
 
         ButtonListener pushed = new ButtonListener();
 
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
+        for (int i = 0; i < 4; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
                 squares[i][j].addActionListener(pushed);
             }
         }
     }
 
 
+
     public void scramble()
     {
         boolean[] used = new boolean[16];
 
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
+        for (int i = 0; i < 4; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
                 int val = (int) (16 * Math.random());
 
-                while (used[val]) {
+                while (used[val])
+                {
                     val = (int) (16 * Math.random());
                 }
 
                 used[val] = true;
 
-                if (val != 0) {
+                if (val != 0)
+                {
                     squares[i][j].setText("" + val);
                     squares[i][j].setBackground(Color.lightGray);
-                } else {
+                }
+                else
+                    {
                     squares[i][j].setBackground(Color.blue);
                 }
             }
         }
     }
+
 
 
     public void moveSquare(int i, int j)
@@ -69,15 +84,19 @@ public class Board extends JFrame {
         if (j > 0 && squares[i][j - 1].getBackground() == Color.blue)
             empty = squares[i][j - 1];
 
-        if (empty == null) {
+        if (empty == null)
+        {
             return;
-        } else {
+        }
+        else
+        {
             empty.setText(squares[i][j].getText());
             empty.setBackground(Color.lightGray);
             squares[i][j].setText("");
             squares[i][j].setBackground(Color.blue);
         }
     }
+
 
 
     class ButtonListener implements ActionListener
