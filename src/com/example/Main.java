@@ -11,7 +11,8 @@ public class Main
         gameBoard.setTitle ("ARRANGE PUZZLE GAME");
         gameBoard.setSize( 400,  400);
         gameBoard.setVisible( true);
-        gameBoard.scramble ( );
+        gameBoard.scramble ();
+        gameBoard.printResult();
         gameBoard.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE);
     }
 }

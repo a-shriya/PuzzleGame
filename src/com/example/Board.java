@@ -4,9 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.TimerTask;
 
 public class Board extends JFrame
 {
+    static int numberOfMoves = 0;
+    public static int t = 0;
     JButton[][] squares = new JButton[4][4];
 
 
@@ -62,7 +65,7 @@ public class Board extends JFrame
                     squares[i][j].setBackground(Color.lightGray);
                 }
                 else
-                    {
+                {
                     squares[i][j].setBackground(Color.blue);
                 }
             }
@@ -75,29 +78,69 @@ public class Board extends JFrame
     {
         JButton empty = null;
 
-        if (i < 3 && squares[i + 1][j].getBackground() == Color.blue)
-            empty = squares[i + 1][j];
-        if (i > 0 && squares[i - 1][j].getBackground() == Color.blue)
-            empty = squares[i - 1][j];
-        if (j < 3 && squares[i][j + 1].getBackground() == Color.blue)
-            empty = squares[i][j + 1];
-        if (j > 0 && squares[i][j - 1].getBackground() == Color.blue)
-            empty = squares[i][j - 1];
+            if (i < 3 && squares[i + 1][j].getBackground() == Color.blue)
+                empty = squares[i + 1][j];
+            if (i > 0 && squares[i - 1][j].getBackground() == Color.blue)
+                empty = squares[i - 1][j];
+            if (j < 3 && squares[i][j + 1].getBackground() == Color.blue)
+                empty = squares[i][j + 1];
+            if (j > 0 && squares[i][j - 1].getBackground() == Color.blue)
+                empty = squares[i][j - 1];
 
-        if (empty == null)
+            if (empty == null)
+            {
+                return;
+            }
+            else
+            {
+                empty.setText(squares[i][j].getText());
+                empty.setBackground(Color.lightGray);
+                squares[i][j].setText("");
+                squares[i][j].setBackground(Color.blue);
+            }
+        while(!isGameOver())
         {
-            return;
-        }
-        else
-        {
-            empty.setText(squares[i][j].getText());
-            empty.setBackground(Color.lightGray);
-            squares[i][j].setText("");
-            squares[i][j].setBackground(Color.blue);
+            numberOfMoves++;
+            System.out.println(numberOfMoves);
+            break;
         }
     }
 
 
+    void printResult()
+    {
+        if(isGameOver()) {
+            System.out.println("You Won!!!!!!!!!");
+        }
+    }
+
+
+    boolean isGameOver()
+    {
+        boolean checkGameOver = true;
+
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (squares[i][j].getLabel() == ((i * 4 + j + 1) + ""))
+                {
+                    checkGameOver = true;
+                } else {
+                    checkGameOver = false;
+                    break;
+                }
+            }
+        }
+
+        if (checkGameOver)
+        {
+            return true;
+        }
+
+        else {
+            return false;
+        }
+
+    }
 
     class ButtonListener implements ActionListener
     {
