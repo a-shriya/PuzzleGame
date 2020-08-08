@@ -4,15 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.TimerTask;
 
 public class Board extends JFrame
 {
     static int numberOfMoves = 0;
     public static int t = 0;
     JButton[][] squares = new JButton[4][4];
-
-
 
     public Board()
     {
@@ -98,12 +95,8 @@ public class Board extends JFrame
                 squares[i][j].setText("");
                 squares[i][j].setBackground(Color.blue);
             }
-        while(!isGameOver())
-        {
             numberOfMoves++;
             System.out.println(numberOfMoves);
-            break;
-        }
     }
 
 
