@@ -10,11 +10,14 @@ public class Board extends JFrame
     static int numberOfMoves = 0;
     public static int t = 0;
     JButton[][] squares = new JButton[4][4];
+    JButton timer1 = new JButton();
+    JButton moves = new JButton();
+
 
     public Board()
     {
         Container container = getContentPane();
-        container.setLayout((new GridLayout(4, 4)));
+        container.setLayout((new GridLayout(5, 4)));
 
         for (int i = 0; i < 4; i++)
         {
@@ -25,6 +28,9 @@ public class Board extends JFrame
                 container.add(num);
             }
         }
+        container.add(timer1);
+        container.add(moves);
+
 
         ButtonListener pushed = new ButtonListener();
 
@@ -96,7 +102,7 @@ public class Board extends JFrame
                 squares[i][j].setBackground(Color.blue);
             }
             numberOfMoves++;
-            System.out.println(numberOfMoves);
+            moves.setText(String.valueOf(numberOfMoves));
     }
 
 
@@ -137,6 +143,7 @@ public class Board extends JFrame
 
     class ButtonListener implements ActionListener
     {
+        @Override
         public void actionPerformed(ActionEvent e)
         {
             Object square = e.getSource();
