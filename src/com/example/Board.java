@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Board extends JFrame
 {
@@ -13,12 +15,17 @@ public class Board extends JFrame
     JButton timer1 = new JButton();
     JButton moves = new JButton();
 
-
     public Board()
     {
+        Countdown countdown = new Countdown();
+        countdown.startCountdown();
         Container container = getContentPane();
         container.setLayout((new GridLayout(5, 4)));
 
+        container.add(new Label("Time"));
+        container.add(timer1);
+        container.add(new Label("Number of moves"));
+        container.add(moves);
         for (int i = 0; i < 4; i++)
         {
             for (int j = 0; j < 4; j++)
@@ -28,11 +35,6 @@ public class Board extends JFrame
                 container.add(num);
             }
         }
-        container.add(new Label("Time"));
-        container.add(timer1);
-        container.add(new Label("Number of moves"));
-        container.add(moves);
-
 
         ButtonListener pushed = new ButtonListener();
 
@@ -44,8 +46,6 @@ public class Board extends JFrame
             }
         }
     }
-
-
 
     public void scramble()
     {
@@ -155,6 +155,24 @@ public class Board extends JFrame
                     }
                 }
             }
+        }
+    }
+
+    class Countdown
+    {
+        final java.util.Timer timer = new Timer();
+        void startCountdown()
+        {
+
+            timer.scheduleAtFixedRate(new TimerTask()
+            {
+                int i = Integer.parseInt(String.valueOf(0));
+
+                public void run()
+                {
+                   timer1.setText(++i + "");
+                }
+            }, 0, 1000);
         }
     }
 }
