@@ -28,7 +28,9 @@ public class Board extends JFrame
                 container.add(num);
             }
         }
+        container.add(new Label("Time"));
         container.add(timer1);
+        container.add(new Label("Number of moves"));
         container.add(moves);
 
 
@@ -120,7 +122,7 @@ public class Board extends JFrame
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                if (squares[i][j].getLabel() == ((i * 4 + j + 1) + ""))
+                if (squares[i][j].getText().equals((i * 4 + j + 1) + ""))
                 {
                     checkGameOver = true;
                 } else {
@@ -130,14 +132,7 @@ public class Board extends JFrame
             }
         }
 
-        if (checkGameOver)
-        {
-            return true;
-        }
-
-        else {
-            return false;
-        }
+        return checkGameOver;
 
     }
 
