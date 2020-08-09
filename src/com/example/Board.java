@@ -10,7 +10,6 @@ import java.util.TimerTask;
 public class Board extends JFrame
 {
     static int numberOfMoves = 0;
-    public static int t = 0;
     JButton[][] squares = new JButton[4][4];
     JButton timer1 = new JButton();
     JButton moves = new JButton();
@@ -108,12 +107,12 @@ public class Board extends JFrame
     }
 
 
-    void printResult()
-    {
-        if(isGameOver()) {
-            System.out.println("You Won!!!!!!!!!");
-        }
-    }
+//    void printResult()
+//    {
+//        while(isGameOver()) {
+//            System.out.println("You Won!!!!!!!!!");
+//        }
+//    }
 
 
     boolean isGameOver()
@@ -125,7 +124,9 @@ public class Board extends JFrame
                 if (squares[i][j].getText().equals((i * 4 + j + 1) + ""))
                 {
                     checkGameOver = true;
-                } else {
+                }
+                else
+                    {
                     checkGameOver = false;
                     break;
                 }
