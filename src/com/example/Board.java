@@ -11,31 +11,36 @@ import java.util.TimerTask;
 public class Board extends JFrame implements Serializable
 {
     static int numberOfMoves = 0;
-    private final int dimension;
+    private int dimension;
     JButton[][] squares = new JButton[10][10];
     JButton timer1 = new JButton();
     JButton moves = new JButton();
     JButton undoButton = new JButton("undo");
     JFrame frame = new JFrame();
-    JButton emptyfinal = null;
-    int ifinal = -1;
-    int jfinal = -1;
-    int iempty = -1;
-    int jempty = -1;
+    JButton emptyFinal = null;
+    int iFinal = -1;
+    int jFinal = -1;
+    int iEmpty = -1;
+    int jEmpty = -1;
+
+
+
 
     public Board(int dimension)
     {
+        JPanel jPanel2 = new JPanel();
         this.dimension = dimension;
 
-        JPanel jPanel2 = new JPanel();
 
         Board.Countdown countdown = new Board.Countdown();
         countdown.startCountdown();
+        UndoListener undo = new UndoListener();
+        undoButton.addActionListener(undo);
         jPanel2.setLayout((new GridLayout(dimension, dimension)));
 
 
-        Font bigFont = new Font("serif", Font.BOLD, 16);
-        Font smallFont = new Font("serif", Font.BOLD, 14);
+        Font bigFont = new Font("serif", Font.BOLD, 14);
+        Font smallFont = new Font("serif", Font.BOLD, 12);
 
         JPanel jPanel = new JPanel();
         Label label1 = new Label("Time   :");
@@ -51,6 +56,12 @@ public class Board extends JFrame implements Serializable
         jPanel.add(label2);
         jPanel.add(moves);
         jPanel.add(undoButton);
+
+
+
+
+
+
 
 
         for (int i = 0; i < dimension; i++)
@@ -71,9 +82,6 @@ public class Board extends JFrame implements Serializable
                 squares[i][j].addActionListener(pushed);
             }
         }
-
-        Board.UndoListerner undo = new Board.UndoListerner();
-        undoButton.addActionListener(undo);
 
         frame.getContentPane().add(BorderLayout.NORTH, jPanel);
         frame.getContentPane().add(BorderLayout.CENTER, jPanel2);
@@ -103,7 +111,8 @@ public class Board extends JFrame implements Serializable
                 {
                     squares[i][j].setText("" + val);
                     squares[i][j].setBackground(Color.lightGray);
-                } else
+                }
+                else
                 {
                     squares[i][j].setBackground(Color.blue);
                 }
@@ -119,26 +128,26 @@ public class Board extends JFrame implements Serializable
         if (i < dimension - 1 && squares[i + 1][j].getBackground() == Color.blue)
         {
             empty = squares[i + 1][j];
-            iempty = i + 1;
-            jempty = j;
+            iEmpty = i + 1;
+            jEmpty = j;
         }
         if (i > 0 && squares[i - 1][j].getBackground() == Color.blue)
         {
             empty = squares[i - 1][j];
-            iempty = i - 1;
-            jempty = j;
+            iEmpty = i - 1;
+            jEmpty = j;
         }
         if (j < dimension - 1 && squares[i][j + 1].getBackground() == Color.blue)
         {
             empty = squares[i][j + 1];
-            iempty = i;
-            jempty = j + 1;
+            iEmpty = i;
+            jEmpty = j + 1;
         }
         if (j > 0 && squares[i][j - 1].getBackground() == Color.blue)
         {
             empty = squares[i][j - 1];
-            iempty = i;
-            jempty = j - 1;
+            iEmpty = i;
+            jEmpty = j - 1;
         }
 
         if (empty == null)
@@ -147,9 +156,9 @@ public class Board extends JFrame implements Serializable
         }
         else
         {
-            emptyfinal = empty;
-            ifinal = i;
-            jfinal = j;
+            emptyFinal = empty;
+            iFinal = i;
+            jFinal = j;
             empty.setText(squares[i][j].getText());
             empty.setBackground(Color.lightGray);
             squares[i][j].setText("");
@@ -157,25 +166,28 @@ public class Board extends JFrame implements Serializable
         }
         numberOfMoves++;
         moves.setText(String.valueOf(numberOfMoves));
+
+
     }
+
 
     void undo()
     {
-        if(ifinal != -1 && jfinal != -1 && iempty != -1 && jempty != -1)
+        if( iEmpty != -1 && jEmpty != -1)
         {
             try
             {
-                squares[ifinal][jfinal].setText(squares[iempty][jempty].getText());
-                squares[ifinal][jfinal].setBackground(Color.lightGray);
-                squares[iempty][jempty].setText("");
-                squares[iempty][jempty].setBackground(Color.blue);
+                squares[iFinal][jFinal].setText(squares[iEmpty][jEmpty].getText());
+                squares[iFinal][jFinal].setBackground(Color.lightGray);
+                squares[iEmpty][jEmpty].setText("");
+                squares[iEmpty][jEmpty].setBackground(Color.blue);
                 int temp1, temp2;
-                temp1 = iempty;
-                temp2 = jempty;
-                iempty = ifinal;
-                jempty = jfinal;
-                jfinal = temp2;
-                ifinal = temp1;
+                temp1 = iEmpty;
+                temp2 = jEmpty;
+                iEmpty = iFinal;
+                jEmpty = jFinal;
+                jFinal = temp2;
+                iFinal = temp1;
             }
             catch (NullPointerException ignored)
             {
@@ -184,59 +196,47 @@ public class Board extends JFrame implements Serializable
 
     }
 
-
-    void printResult()
-    {
-        if(isGameOver()) {
-            System.out.println("You Won!!!!!!!!!");
-        }
-    }
-
-
-    boolean isGameOver()
-    {
-        boolean checkGameOver = false;
-
-        for (int i = 0; i < dimension; i++)
-        {
-            for (int j = 0; j < dimension; j++)
-            {
-                if(i != dimension-1 && j!= dimension-1)
-                {
-                    checkGameOver = squares[i][j].getText().equals(String.valueOf((i * dimension) + j + 1));
-                }
-            }
-        }
-        if(checkGameOver)
-        {
-            System.out.println("Won");
-        }
-        return checkGameOver;
-    }
-
     class ButtonListener implements ActionListener
     {
+
         @Override
         public void actionPerformed(ActionEvent e)
         {
             Object square = e.getSource();
 
             outer:
-            for (int i = 0; i < dimension; i++)
-            {
-                for (int j = 0; j < dimension; j++)
-                {
-                    if (squares[i][j] == square)
-                    {
+            for (int i = 0; i < dimension; i++) {
+                for (int j = 0; j < dimension; j++) {
+
+                    if (squares[i][j] == square) {
                         moveSquare(i, j);
                         break outer;
                     }
                 }
             }
+
+            boolean check = true;
+            int count = 0;
+            for (int i = 0; i < dimension*dimension; i++)
+            {
+                int row = i / dimension;
+                int col = i % dimension;
+
+                check = squares[row][col].getText().equals(String.valueOf(row*dimension + col + 1));
+                if(check)
+                {
+                    count++;
+                }
+            }
+            if(count == (dimension*dimension -1))
+                JOptionPane.showMessageDialog(Board.this,"!!!you won!!!");
+
         }
     }
 
-    class UndoListerner implements ActionListener
+
+
+    class UndoListener implements ActionListener
     {
 
         @Override
@@ -245,6 +245,9 @@ public class Board extends JFrame implements Serializable
             undo();
         }
     }
+
+
+
     class Countdown
     {
         final java.util.Timer timer = new Timer();
