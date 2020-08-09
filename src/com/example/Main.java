@@ -9,6 +9,7 @@ public class Main
         Board gameBoard = new Board(2);
         gameBoard.setTitle("ARRANGE PUZZLE GAME");
         gameBoard.printResult();
+        gameBoard.isGameOver();
         gameBoard.scramble ();
     }
 }

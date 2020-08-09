@@ -11,7 +11,7 @@ import java.util.TimerTask;
 public class Board extends JFrame implements Serializable
 {
     static int numberOfMoves = 0;
-    private int dimension;
+    private final int dimension;
     JButton[][] squares = new JButton[10][10];
     JButton timer1 = new JButton();
     JButton moves = new JButton();
@@ -177,14 +177,9 @@ public class Board extends JFrame implements Serializable
                 jfinal = temp2;
                 ifinal = temp1;
             }
-            catch (NullPointerException nullPointerException)
+            catch (NullPointerException ignored)
             {
-                return;
             }
-        }
-        else
-        {
-            return;
         }
 
     }
@@ -200,22 +195,21 @@ public class Board extends JFrame implements Serializable
 
     boolean isGameOver()
     {
-        boolean checkGameOver = true;
+        boolean checkGameOver = false;
 
         for (int i = 0; i < dimension; i++)
         {
             for (int j = 0; j < dimension; j++)
             {
-                if (squares[i][j].getText().equals(String.valueOf((i * dimension) + j + 1)))
+                if(i != dimension-1 && j!= dimension-1)
                 {
-
-                    checkGameOver = true;
-                }
-                else
-                {
-                    checkGameOver = false;
+                    checkGameOver = squares[i][j].getText().equals(String.valueOf((i * dimension) + j + 1));
                 }
             }
+        }
+        if(checkGameOver)
+        {
+            System.out.println("Won");
         }
         return checkGameOver;
     }
@@ -248,7 +242,6 @@ public class Board extends JFrame implements Serializable
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            Object square = e.getSource();
             undo();
         }
     }
