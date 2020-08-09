@@ -4,21 +4,27 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Board extends JFrame
+public class Board extends JFrame implements Serializable
 {
     static int numberOfMoves = 0;
     private int dimension;
-    static int count;
     JButton[][] squares = new JButton[10][10];
     JButton timer1 = new JButton();
     JButton moves = new JButton();
+    JButton undoButton = new JButton("undo");
+    JFrame frame = new JFrame();
+    JButton emptyfinal = null;
+    int ifinal = -1;
+    int jfinal = -1;
+    int iempty = -1;
+    int jempty = -1;
 
     public Board(int dimension)
     {
-
         this.dimension = dimension;
 
         JPanel jPanel2 = new JPanel();
@@ -40,9 +46,11 @@ public class Board extends JFrame
         moves.setText("0");
         timer1.setFont(bigFont);
         moves.setFont(bigFont);
+        undoButton.setFont(bigFont);
         jPanel.add(timer1);
         jPanel.add(label2);
         jPanel.add(moves);
+        jPanel.add(undoButton);
 
 
         for (int i = 0; i < dimension; i++)
@@ -54,7 +62,6 @@ public class Board extends JFrame
                 jPanel2.add(num);
             }
         }
-
         Board.ButtonListener pushed = new Board.ButtonListener();
 
         for (int i = 0; i < dimension; i++)
@@ -65,27 +72,29 @@ public class Board extends JFrame
             }
         }
 
-        JFrame frame = new JFrame();
+        Board.UndoListerner undo = new Board.UndoListerner();
+        undoButton.addActionListener(undo);
+
         frame.getContentPane().add(BorderLayout.NORTH, jPanel);
         frame.getContentPane().add(BorderLayout.CENTER, jPanel2);
-        frame.setSize(400,400);
-        frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 400);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
 
     public void scramble()
     {
-        boolean[] used = new boolean[dimension*dimension];
+        boolean[] used = new boolean[dimension * dimension];
 
         for (int i = 0; i < dimension; i++)
         {
             for (int j = 0; j < dimension; j++)
             {
-                int val = (int) (dimension*dimension * Math.random());
+                int val = (int) (dimension * dimension * Math.random());
 
                 while (used[val])
                 {
-                    val = (int) (dimension*dimension * Math.random());
+                    val = (int) (dimension * dimension * Math.random());
                 }
 
                 used[val] = true;
@@ -94,8 +103,7 @@ public class Board extends JFrame
                 {
                     squares[i][j].setText("" + val);
                     squares[i][j].setBackground(Color.lightGray);
-                }
-                else
+                } else
                 {
                     squares[i][j].setBackground(Color.blue);
                 }
@@ -104,19 +112,34 @@ public class Board extends JFrame
     }
 
 
-
     public void moveSquare(int i, int j)
     {
         JButton empty = null;
 
-        if (i < dimension-1 && squares[i + 1][j].getBackground() == Color.blue)
+        if (i < dimension - 1 && squares[i + 1][j].getBackground() == Color.blue)
+        {
             empty = squares[i + 1][j];
+            iempty = i + 1;
+            jempty = j;
+        }
         if (i > 0 && squares[i - 1][j].getBackground() == Color.blue)
+        {
             empty = squares[i - 1][j];
-        if (j < dimension-1 && squares[i][j + 1].getBackground() == Color.blue)
+            iempty = i - 1;
+            jempty = j;
+        }
+        if (j < dimension - 1 && squares[i][j + 1].getBackground() == Color.blue)
+        {
             empty = squares[i][j + 1];
+            iempty = i;
+            jempty = j + 1;
+        }
         if (j > 0 && squares[i][j - 1].getBackground() == Color.blue)
+        {
             empty = squares[i][j - 1];
+            iempty = i;
+            jempty = j - 1;
+        }
 
         if (empty == null)
         {
@@ -124,6 +147,9 @@ public class Board extends JFrame
         }
         else
         {
+            emptyfinal = empty;
+            ifinal = i;
+            jfinal = j;
             empty.setText(squares[i][j].getText());
             empty.setBackground(Color.lightGray);
             squares[i][j].setText("");
@@ -133,10 +159,40 @@ public class Board extends JFrame
         moves.setText(String.valueOf(numberOfMoves));
     }
 
+    void undo()
+    {
+        if(ifinal != -1 && jfinal != -1 && iempty != -1 && jempty != -1)
+        {
+            try
+            {
+                squares[ifinal][jfinal].setText(squares[iempty][jempty].getText());
+                squares[ifinal][jfinal].setBackground(Color.lightGray);
+                squares[iempty][jempty].setText("");
+                squares[iempty][jempty].setBackground(Color.blue);
+                int temp1, temp2;
+                temp1 = iempty;
+                temp2 = jempty;
+                iempty = ifinal;
+                jempty = jfinal;
+                jfinal = temp2;
+                ifinal = temp1;
+            }
+            catch (NullPointerException nullPointerException)
+            {
+                return;
+            }
+        }
+        else
+        {
+            return;
+        }
+
+    }
+
 
     void printResult()
     {
-        if(count == dimension-1) {
+        if(isGameOver()) {
             System.out.println("You Won!!!!!!!!!");
         }
     }
@@ -146,24 +202,22 @@ public class Board extends JFrame
     {
         boolean checkGameOver = true;
 
-        for (int i = 0; i < dimension; i++) {
-            for (int j = 0; j < dimension; j++) {
-                if (squares[i][j].getText().equals(String.valueOf((i * dimension) + j + 1)) && squares[dimension][dimension].getBackground() == Color.blue)
+        for (int i = 0; i < dimension; i++)
+        {
+            for (int j = 0; j < dimension; j++)
+            {
+                if (squares[i][j].getText().equals(String.valueOf((i * dimension) + j + 1)))
                 {
+
                     checkGameOver = true;
-                    count ++;
-                    System.out.println("Won");
-                } else {
+                }
+                else
+                {
                     checkGameOver = false;
                 }
             }
         }
-        if(count == dimension-1) {
-            System.out.println("You Won!!!!!!!!!");
-        }
-
         return checkGameOver;
-
     }
 
     class ButtonListener implements ActionListener
@@ -188,6 +242,16 @@ public class Board extends JFrame
         }
     }
 
+    class UndoListerner implements ActionListener
+    {
+
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            Object square = e.getSource();
+            undo();
+        }
+    }
     class Countdown
     {
         final java.util.Timer timer = new Timer();
