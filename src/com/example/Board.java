@@ -217,10 +217,10 @@ public class Board extends JFrame implements Serializable
 
             boolean check = true;
             int count = 0;
-            for (int i = 0; i < dimension*dimension; i++)
+            for (int j = 0; j < dimension*dimension; j++)
             {
-                int row = i / dimension;
-                int col = i % dimension;
+                int row = j / dimension;
+                int col = j % dimension;
 
                 check = squares[row][col].getText().equals(String.valueOf(row*dimension + col + 1));
                 if(check)
