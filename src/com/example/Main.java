@@ -13,7 +13,9 @@ public class Main
     public static void main(String[] args) throws UnsupportedAudioFileException, IOException, LineUnavailableException
     {
         Music music = new Music();
-        music.playMusic("C:\\Users\\anego\\IdeaProjects\\PuzzleGame\\music_zapsplat_game_music_action_fun_funky_electro_disco_023 (online-audio-converter.com).wav");
+        String mainMusic = "C:\\Users\\anego\\IdeaProjects\\PuzzleGame\\music_zapsplat_game_music_action_fun_funky_electro_disco_023 (online-audio-converter.com).wav";
+
+        music.playMusic(mainMusic);
         SwingUtilities.invokeLater(new Runnable()
         {
             public void run()

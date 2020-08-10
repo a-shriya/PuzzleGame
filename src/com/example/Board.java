@@ -16,6 +16,8 @@ public class Board extends JFrame implements Serializable
     static int numberOfMoves = 0;
     Music music1 = new Music();
     String musicMove = "C:\\Users\\anego\\IdeaProjects\\PuzzleGame\\multimedia_button_click_025 (online-audio-converter.com).wav";
+    String winMusic = "C:\\Users\\anego\\IdeaProjects\\PuzzleGame\\little_robot_sound_factory_Jingle_Win_Synth_02 (online-audio-converter.com).wav";
+    String errorMusic = "C:\\Users\\anego\\IdeaProjects\\PuzzleGame\\zapsplat_multimedia_alert_error_002_26393 (online-audio-converter.com).wav";
 
     private int dimension;
     JButton[][] squares = new JButton[10][10];
@@ -174,7 +176,7 @@ public class Board extends JFrame implements Serializable
 
         if (empty == null)
         {
-            music1.playMusic("zapsplat_multimedia_game_error_tone_006_24924.wav");
+            music1.playMusic(errorMusic);
             return;
         }
         else
@@ -234,19 +236,15 @@ public class Board extends JFrame implements Serializable
                     if (squares[i][j] == square) {
                         try {
                             moveSquare(i, j);
-                        } catch (UnsupportedAudioFileException unsupportedAudioFileException) {
+                        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException unsupportedAudioFileException) {
                             unsupportedAudioFileException.printStackTrace();
-                        } catch (IOException ioException) {
-                            ioException.printStackTrace();
-                        } catch (LineUnavailableException lineUnavailableException) {
-                            lineUnavailableException.printStackTrace();
                         }
                         break outer;
                     }
                 }
             }
 
-            boolean check = true;
+            boolean check;
             int count = 0;
             for (int j = 0; j < dimension*dimension; j++)
             {
@@ -262,13 +260,9 @@ public class Board extends JFrame implements Serializable
             if(count == (dimension*dimension -1))
             {
                 try {
-                    music1.playMusic("little_robot_sound_factory_Jingle_Win_Synth_02 (online-audio-converter.com).wav");
-                } catch (IOException ioException) {
+                    music1.playMusic(winMusic);
+                } catch (IOException | UnsupportedAudioFileException | LineUnavailableException ioException) {
                     ioException.printStackTrace();
-                } catch (UnsupportedAudioFileException unsupportedAudioFileException) {
-                    unsupportedAudioFileException.printStackTrace();
-                } catch (LineUnavailableException lineUnavailableException) {
-                    lineUnavailableException.printStackTrace();
                 }
                 JOptionPane.showMessageDialog(Board.this, "!!!You Have Won ~ Binod!!!");
             }
