@@ -15,9 +15,9 @@ public class Board extends JFrame implements Serializable
 {
     static int numberOfMoves = 0;
     Music music1 = new Music();
-    String musicMove = "C:\\Users\\anego\\IdeaProjects\\PuzzleGame\\multimedia_button_click_025 (online-audio-converter.com).wav";
-    String winMusic = "C:\\Users\\anego\\IdeaProjects\\PuzzleGame\\little_robot_sound_factory_Jingle_Win_Synth_02 (online-audio-converter.com).wav";
-    String errorMusic = "C:\\Users\\anego\\IdeaProjects\\PuzzleGame\\zapsplat_multimedia_alert_error_002_26393 (online-audio-converter.com).wav";
+    String musicMove = "C:\\Users\\srini\\IdeaProjects\\PuzzleGame\\multimedia_button_click_025 (online-audio-converter.com).wav";
+    String winMusic = "C:\\Users\\srini\\IdeaProjects\\PuzzleGame\\little_robot_sound_factory_Jingle_Win_Synth_02 (online-audio-converter.com).wav";
+    String errorMusic = "C:\\Users\\srini\\IdeaProjects\\PuzzleGame\\zapsplat_multimedia_alert_error_002_26393 (online-audio-converter.com).wav";
 
     private int dimension;
     JButton[][] squares = new JButton[10][10];
@@ -47,7 +47,7 @@ public class Board extends JFrame implements Serializable
     {
         JPanel jPanel2 = new JPanel();
         this.dimension = dimension;
-
+        System.out.println(dimension);
 
         Board.Countdown countdown = new Board.Countdown();
         countdown.startCountdown();
@@ -74,13 +74,6 @@ public class Board extends JFrame implements Serializable
         jPanel.add(moves);
         jPanel.add(undoButton);
 
-
-
-
-
-
-
-
         for (int i = 0; i < dimension; i++)
         {
             for (int j = 0; j < dimension; j++)
@@ -99,6 +92,7 @@ public class Board extends JFrame implements Serializable
                 squares[i][j].addActionListener(pushed);
             }
         }
+
 
         frame.getContentPane().add(BorderLayout.NORTH, jPanel);
         frame.getContentPane().add(BorderLayout.CENTER, jPanel2);

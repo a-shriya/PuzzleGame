@@ -7,7 +7,7 @@ import java.util.TimerTask;
 public class Countdown
 {
     final java.util.Timer timer = new Timer();
-     void startCountdown()
+     JButton startCountdown()
     {
         JButton timer1 = new JButton();
 
@@ -20,5 +20,6 @@ public class Countdown
                 System.out.println(++i + "");
             }
         }, 0, 1000);
+        return timer1;
     }
 }
