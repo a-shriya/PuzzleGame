@@ -1,9 +1,12 @@
 package com.example;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -11,6 +14,9 @@ import java.util.TimerTask;
 public class Board extends JFrame implements Serializable
 {
     static int numberOfMoves = 0;
+    Music music1 = new Music();
+    String musicMove = "C:\\Users\\anego\\IdeaProjects\\PuzzleGame\\multimedia_button_click_025 (online-audio-converter.com).wav";
+
     private int dimension;
     JButton[][] squares = new JButton[10][10];
     JButton timer1 = new JButton();
@@ -24,6 +30,15 @@ public class Board extends JFrame implements Serializable
     int jEmpty = -1;
 
 
+    public void setDimension(int dimensionInput)
+    {
+        dimension = dimensionInput;
+    }
+
+    public int getDimension()
+    {
+        return dimension;
+    }
 
 
     public Board(int dimension)
@@ -121,37 +136,45 @@ public class Board extends JFrame implements Serializable
     }
 
 
-    public void moveSquare(int i, int j)
+    public void moveSquare(int i, int j) throws UnsupportedAudioFileException, IOException, LineUnavailableException
     {
         JButton empty = null;
 
+
         if (i < dimension - 1 && squares[i + 1][j].getBackground() == Color.blue)
         {
+
             empty = squares[i + 1][j];
             iEmpty = i + 1;
             jEmpty = j;
+            music1.playMusic(musicMove);
         }
         if (i > 0 && squares[i - 1][j].getBackground() == Color.blue)
         {
             empty = squares[i - 1][j];
             iEmpty = i - 1;
             jEmpty = j;
+            music1.playMusic(musicMove);
+
         }
         if (j < dimension - 1 && squares[i][j + 1].getBackground() == Color.blue)
         {
             empty = squares[i][j + 1];
             iEmpty = i;
             jEmpty = j + 1;
+            music1.playMusic(musicMove);
         }
         if (j > 0 && squares[i][j - 1].getBackground() == Color.blue)
         {
             empty = squares[i][j - 1];
             iEmpty = i;
             jEmpty = j - 1;
+            music1.playMusic(musicMove);
         }
 
         if (empty == null)
         {
+            music1.playMusic("zapsplat_multimedia_game_error_tone_006_24924.wav");
             return;
         }
         else
@@ -209,7 +232,15 @@ public class Board extends JFrame implements Serializable
                 for (int j = 0; j < dimension; j++) {
 
                     if (squares[i][j] == square) {
-                        moveSquare(i, j);
+                        try {
+                            moveSquare(i, j);
+                        } catch (UnsupportedAudioFileException unsupportedAudioFileException) {
+                            unsupportedAudioFileException.printStackTrace();
+                        } catch (IOException ioException) {
+                            ioException.printStackTrace();
+                        } catch (LineUnavailableException lineUnavailableException) {
+                            lineUnavailableException.printStackTrace();
+                        }
                         break outer;
                     }
                 }
@@ -229,7 +260,18 @@ public class Board extends JFrame implements Serializable
                 }
             }
             if(count == (dimension*dimension -1))
-                JOptionPane.showMessageDialog(Board.this,"!!!you won!!!");
+            {
+                try {
+                    music1.playMusic("little_robot_sound_factory_Jingle_Win_Synth_02 (online-audio-converter.com).wav");
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                } catch (UnsupportedAudioFileException unsupportedAudioFileException) {
+                    unsupportedAudioFileException.printStackTrace();
+                } catch (LineUnavailableException lineUnavailableException) {
+                    lineUnavailableException.printStackTrace();
+                }
+                JOptionPane.showMessageDialog(Board.this, "!!!You Have Won ~ Binod!!!");
+            }
 
         }
     }
