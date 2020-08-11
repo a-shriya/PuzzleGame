@@ -8,6 +8,9 @@ import java.awt.event.ActionListener;
 public class RadioButton extends  JPanel implements ActionListener
 {
     private int dimension = 2;
+    String leastMove ;
+    String leastTimeTaken ;
+    String highScorer;
     public int getDimension()
     {
         return dimension;
@@ -26,6 +29,10 @@ public class RadioButton extends  JPanel implements ActionListener
     static String grid8 = "9X9";
     static String grid9 = "10X10";
 
+    JButton leastMovebutton = new JButton(" ");
+    JButton leastTimeButton = new JButton(" ");
+    JButton hifhScorerButton = new JButton();
+
     JRadioButton button1 = new JRadioButton(grid1);
     JRadioButton button2 = new JRadioButton(grid2);
     JRadioButton button3 = new JRadioButton(grid3);
@@ -41,7 +48,16 @@ public class RadioButton extends  JPanel implements ActionListener
     {
         super(new BorderLayout());
 
+        HighScore highScore = new HighScore();
+        String high = highScore.getHighScore();
+        leastMove = high.substring(0,1);
+        leastTimeTaken =  high.substring(1,2);
+        highScorer = high.substring(2);
 
+        leastMovebutton.setText(String.valueOf(leastMove));
+        System.out.println(leastMove);
+        leastTimeButton.setText(String.valueOf(leastTimeTaken));
+        hifhScorerButton.setText(highScorer);
 
         button1.setActionCommand(grid1);
         button1.setSelected(true);
@@ -93,6 +109,12 @@ public class RadioButton extends  JPanel implements ActionListener
         button9.addActionListener(this);
 
         JPanel radioPanel = new JPanel(new GridLayout(0,1));
+        radioPanel.add(new Label("Highest Scorer"));
+        radioPanel.add(hifhScorerButton );
+        radioPanel.add(new Label("Least Time Taken"));
+        radioPanel.add(leastTimeButton);
+        radioPanel.add(new Label("Least Moves Made"));
+        radioPanel.add(leastMovebutton);
         radioPanel.add(button1);
         radioPanel.add(button2);
         radioPanel.add(button3);

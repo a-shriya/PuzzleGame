@@ -13,13 +13,17 @@ import java.util.TimerTask;
 
 public class Board extends JFrame implements Serializable
 {
+    private int leastMove = 100;
+    private int leastTimeTaken = 100;
+    private String highScorer;
     static int numberOfMoves = 0;
+    String name ;
     Music music1 = new Music();
     String musicMove = "C:\\Users\\srini\\IdeaProjects\\PuzzleGame\\multimedia_button_click_025 (online-audio-converter.com).wav";
     String winMusic = "C:\\Users\\srini\\IdeaProjects\\PuzzleGame\\little_robot_sound_factory_Jingle_Win_Synth_02 (online-audio-converter.com).wav";
     String errorMusic = "C:\\Users\\srini\\IdeaProjects\\PuzzleGame\\zapsplat_multimedia_alert_error_002_26393 (online-audio-converter.com).wav";
 
-    private int dimension;
+    private final int dimension;
     JButton[][] squares = new JButton[10][10];
     JButton timer1 = new JButton();
     JButton moves = new JButton();
@@ -30,25 +34,16 @@ public class Board extends JFrame implements Serializable
     int jFinal = -1;
     int iEmpty = -1;
     int jEmpty = -1;
+    Twoframes twoframes = new Twoframes();
+    HighScore highScore = new HighScore();
 
-
-    public void setDimension(int dimensionInput)
-    {
-        dimension = dimensionInput;
-    }
-
-    public int getDimension()
-    {
-        return dimension;
-    }
-
-
-    public Board(int dimension)
+    public Board(int dimension, String name)
     {
         JPanel jPanel2 = new JPanel();
         this.dimension = dimension;
         System.out.println(dimension);
 
+        this.name = name;
         Board.Countdown countdown = new Board.Countdown();
         countdown.startCountdown();
         UndoListener undo = new UndoListener();
@@ -96,7 +91,10 @@ public class Board extends JFrame implements Serializable
 
         frame.getContentPane().add(BorderLayout.NORTH, jPanel);
         frame.getContentPane().add(BorderLayout.CENTER, jPanel2);
-        frame.setSize(400, 400);
+        if(dimension < 5)
+            frame.setSize(400, 400);
+        else
+            frame.setSize(1000,1000);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
@@ -215,6 +213,56 @@ public class Board extends JFrame implements Serializable
 
     }
 
+    public int getLeastMove()
+    {
+        return leastMove;
+    }
+
+    public void setLeastMove(int leastMove)
+    {
+        this.leastMove = leastMove;
+    }
+
+    public int getLeastTimeTaken()
+    {
+        return leastTimeTaken;
+    }
+
+    public void setLeastTimeTaken(int leastTimeTaken)
+    {
+        this.leastTimeTaken = leastTimeTaken;
+    }
+
+    public void checkHighestScore(int time, int move)
+    {
+        System.out.println(twoframes.getName());
+        if(getLeastTimeTaken() > time && getLeastMove() > move)
+        {
+            setHighScorer(name);
+            setLeastMove(move);
+            setLeastTimeTaken(time);
+            highScore.setHighScore(getLeastTimeTaken(),getLeastMove(),getHighScorer());
+            String high = highScore.getHighScore();
+            System.out.println("Least Move " + high.charAt(0));
+            System.out.println("Least Time Taken " + high.charAt(1));
+            System.out.println("HighestScorer is " + high.substring(2));
+            setName(high.substring(2));
+            setLeastTimeTaken(high.charAt(1));
+            setLeastMove(high.charAt(0));
+
+        }
+    }
+
+    public String getHighScorer()
+    {
+        return highScorer;
+    }
+
+    public void setHighScorer(String highScorer)
+    {
+        this.highScorer = highScorer;
+    }
+
     class ButtonListener implements ActionListener
     {
 
@@ -258,6 +306,7 @@ public class Board extends JFrame implements Serializable
                 } catch (IOException | UnsupportedAudioFileException | LineUnavailableException ioException) {
                     ioException.printStackTrace();
                 }
+                checkHighestScore(Integer.parseInt(timer1.getText()), Integer.parseInt(moves.getText()));
                 JOptionPane.showMessageDialog(Board.this, "!!!You Have Won ~ Binod!!!");
             }
 
