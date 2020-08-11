@@ -11,14 +11,17 @@ public class RadioButton extends  JPanel implements ActionListener
     String leastMove ;
     String leastTimeTaken ;
     String highScorer;
+
     public int getDimension()
     {
         return dimension;
     }
+
     public void setDimension(int dimension)
     {
         this.dimension = dimension;
     }
+
     static String grid1 = "2X2";
     static String grid2 = "3X3";
     static String grid3 = "4X4";
@@ -54,8 +57,7 @@ public class RadioButton extends  JPanel implements ActionListener
         leastTimeTaken =  high.substring(1,2);
         highScorer = high.substring(2);
 
-        leastMovebutton.setText(String.valueOf(leastMove));
-        System.out.println(leastMove);
+        leastMovebutton.setText(leastMove);
         leastTimeButton.setText(String.valueOf(leastTimeTaken));
         hifhScorerButton.setText(highScorer);
 
@@ -179,5 +181,4 @@ public class RadioButton extends  JPanel implements ActionListener
             setDimension(10);
         }
     }
-
 }

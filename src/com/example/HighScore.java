@@ -23,7 +23,7 @@ public class HighScore
     String getHighScore()
     {
         try {
-            File myObj = new File("C:\\Users\\srini\\IdeaProjects\\PuzzleGame\\HighScorePuzzleGame.txt");
+            File myObj = new File("C:\\Users\\anego\\IdeaProjects\\PuzzleGame\\HighScorePuzzleGame.txt");
             Scanner myReader = new Scanner(myObj);
             String data = myReader.nextLine();
             myReader.close();
